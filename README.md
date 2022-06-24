@@ -1,2 +1,2 @@
 # web-quiz
-flask simple web quiz/form
+django web quiz
