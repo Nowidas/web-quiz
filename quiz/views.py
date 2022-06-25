@@ -1,5 +1,7 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
+from django.http import Http404
+
+from .models import Test
 
 # Create your views here.
 def index(request):
@@ -7,7 +9,16 @@ def index(request):
 
 
 def quizzes(request):
-    return render(request, "quiz/quizzes.html")
+    quizzes = Test.objects.all()
+    return render(request, "quiz/quizzes.html", {"quizzes": quizzes})
+
+
+def quiz_details(request, quiz_id):
+    try:
+        quiz = get_object_or_404(Test, pk=quiz_id)
+    except Test.DoesNotExist:
+        raise Http404("Question does not exist")
+    return render(request, "quiz/detail.html", {"quiz": quiz})
 
 
 def login(request):
