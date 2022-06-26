@@ -32,15 +32,6 @@ class Question(models.Model):
         return self.question
 
 
-class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.CharField(max_length=200)
-    if_correct = models.BooleanField()
-
-    def __str__(self):
-        return self.choice_text
-
-
 class Test_user(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     test_event = models.ForeignKey(Test_event, on_delete=models.CASCADE)
@@ -54,7 +45,12 @@ class Test_user(models.Model):
     class Meta:
         unique_together = ("user", "test_event")
 
-    # models.UniqueConstraint(
-    #     name="only_one_user_test_aign",
-    #     fields=["user", "test_event"],
-    # )
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    picks = models.ManyToManyField(Test_user, blank=True, null=True)
+    choice_text = models.CharField(max_length=200)
+    if_correct = models.BooleanField()
+
+    def __str__(self):
+        return self.choice_text

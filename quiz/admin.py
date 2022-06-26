@@ -6,6 +6,7 @@ from .models import Test, Question, Choice, Test_event, Test_user
 
 admin.site.register(Question)
 admin.site.register(Test_user)
+admin.site.register(Choice)
 
 
 class ChoiceionInline(nested_admin.NestedStackedInline):
