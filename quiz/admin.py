@@ -2,11 +2,12 @@
 from django.contrib import admin
 import nested_admin
 
-from .models import Test, Question, Choice, Test_event, Test_user
+from .models import Test, Question, Choice, Test_event, Test_user, ChoicePerUser
 
 admin.site.register(Question)
 admin.site.register(Test_user)
 admin.site.register(Choice)
+admin.site.register(ChoicePerUser)
 
 
 class ChoiceionInline(nested_admin.NestedStackedInline):

@@ -49,7 +49,9 @@ class Test_user(models.Model):
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    picks = models.ManyToManyField(Test_user, blank=True, null=True)
+    picks = models.ManyToManyField(
+        Test_user, blank=True, null=True, through="ChoicePerUser"
+    )
     choice_text = models.CharField(max_length=200)
     if_correct = models.BooleanField()
 
