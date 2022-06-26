@@ -12,6 +12,7 @@ class Test(models.Model):
 
 class Test_event(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, through="Test_user")
     name = models.CharField(max_length=200)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
@@ -42,9 +43,18 @@ class Choice(models.Model):
 
 class Test_user(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    test_event = models.ForeignKey(Test_event, on_delete=models.CASCADE)
+
     taken = models.BooleanField()
-    score = models.IntegerField()
+    score = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return str(self.user + "|" + self.choice)
+        return str(self.test_event) + " - " + str(self.user.username)
+
+    class Meta:
+        unique_together = ("user", "test_event")
+
+    # models.UniqueConstraint(
+    #     name="only_one_user_test_aign",
+    #     fields=["user", "test_event"],
+    # )
