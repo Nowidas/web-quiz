@@ -20,16 +20,16 @@
                             <a href="/" class="navbar-item">
                                 HOME
                             </a>
-                            <a href="/quiz/quizzes" class="navbar-item">
+                            <a href="{% url 'quizzes' %}" class="navbar-item">
                                 Quizzes
                             </a>
-                            <a href="/quiz/login" class="navbar-item">
+                            <a href="{% url 'login' %}" class="navbar-item">
                                 Login
                             </a>
-                            <a href="/quiz/signup" class="navbar-item">
+                            <a href="{% url 'signup' %}" class="navbar-item">
                                 Signup
                             </a>
-                            <a href="/quiz/logout" class="navbar-item">
+                            <a href="{% url 'logout' %}" class="navbar-item">
                                 Logout
                             </a>
                         </div>

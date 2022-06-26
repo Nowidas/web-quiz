@@ -20,4 +20,5 @@ urlpatterns = [
     path("quiz/", include("quiz.urls")),
     path("", include("quiz.urls")),
     path("admin/", admin.site.urls),
+    path("^_nested_admin/", include("nested_admin.urls")),
 ]

@@ -15,7 +15,7 @@ class Test_event(models.Model):
     name = models.CharField(max_length=200)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    reminder_date = models.DateTimeField()
+    reminder_date = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -24,6 +24,7 @@ class Test_event(models.Model):
 class Question(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     question = models.TextField()
+    img_link = models.CharField(max_length=200, blank=True, null=True)
     q_type = models.CharField(max_length=50)
 
     def __str__(self):
