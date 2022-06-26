@@ -21,4 +21,5 @@ urlpatterns = [
     path("", include("quiz.urls")),
     path("admin/", admin.site.urls),
     path("^_nested_admin/", include("nested_admin.urls")),
+    # path("accounts/", include("django.contrib.auth.urls")),
 ]

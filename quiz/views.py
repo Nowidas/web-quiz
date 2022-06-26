@@ -1,5 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.http import Http404
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
 
 from .models import Test
 
@@ -21,8 +23,19 @@ def quiz_details(request, quiz_id):
     return render(request, "quiz/detail.html", {"quiz": quiz})
 
 
-def login(request):
-    return render(request, "quiz/login.html")
+def login_page(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("/quizzes.html")
+        else:
+            messages.error(request, "Bad credencials")
+            return render(request, "quiz/login.html")
+    else:
+        return render(request, "quiz/login.html")
 
 
 def signup(request):
