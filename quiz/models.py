@@ -36,7 +36,8 @@ class Test_user(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     test_event = models.ForeignKey(Test_event, on_delete=models.CASCADE)
 
-    taken = models.BooleanField()
+    taken = models.BooleanField(blank=True, null=True)
+    start_date = models.DateTimeField(blank=True, null=True)
     score = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
@@ -54,3 +55,16 @@ class Choice(models.Model):
 
     def __str__(self):
         return self.choice_text
+
+
+class ChoicePerUser(models.Model):
+    pick = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    test_user = models.ForeignKey(Test_user, on_delete=models.CASCADE)
+
+    ans_time = models.DateTimeField()
+
+    def __str__(self):
+        return str(self.test_user) + " - " + str(self.pick)
+
+    class Meta:
+        unique_together = ("pick", "test_user")
