@@ -8,6 +8,6 @@ urlpatterns = [
     path("quizzes", views.quizzes, name="quizzes"),
     path("<int:quiz_id>/", views.quiz_details, name="quiz_details"),
     path("login", views.login_page, name="login"),
-    # path("signup", views.signup, name="signup"),
-    # path("logout", views.logout, name="logout"),
+    path("signup", views.signup_page, name="signup"),
+    path("logout", views.logout_page, name="logout"),
 ]
