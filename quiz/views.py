@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 from django.contrib import messages
 
-from .models import Test
+from .models import Test, Test_event, Test_user
 
 # Create your views here.
 @login_required
@@ -17,8 +17,16 @@ def index(request):
 
 @login_required
 def quizzes(request):
-    quizzes = Test.objects.all()
-    return render(request, "quiz/quizzes.html", {"quizzes": quizzes})
+    quiz_event = Test_event.objects.filter(users=request.user)
+    print(quiz_event)
+    for q in quiz_event:
+        print(str(request.user.id) + " + " + str(q.id))
+        infooo = Test_user.objects.get(user=request.user.id, test_event=q.id)
+        print(infooo.taken)
+
+    # Test_user.objects.get()
+
+    return render(request, "quiz/quizzes.html", {"quiz_event": quiz_event})
 
 
 @login_required

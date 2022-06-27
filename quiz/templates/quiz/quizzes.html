@@ -8,9 +8,11 @@
     You welcom :).
 </h2>
 <ul>
-    {% for quiz in quizzes %}
+    {% for quiz in quiz_event %}
     <li>
-        <a href="/quiz/{{ quiz.id }}/">{{quiz}}</a>
+        <a href="/quiz/{{ quiz.id }}/">{{quiz.name}}</a>
+        {{quiz.start_date}}
+        {{quiz.end_date}}
     </li>
     {% endfor %}
 </ul>

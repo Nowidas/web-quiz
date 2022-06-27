@@ -17,6 +17,7 @@ class Test_event(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     reminder_date = models.DateTimeField(blank=True, null=True)
+    # time_to_complete = models.TimeField() # for now depend only on start end time
 
     def __str__(self):
         return self.name
