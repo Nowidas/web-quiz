@@ -2,17 +2,15 @@
 
 {% block content %}
 <h1 class="title">
-    list of quzzes........
+    Your assigned quizzes:
 </h1>
-<h2 class="subtitle">
-    You welcom :).
-</h2>
+
 <ul>
     {% for quiz in quiz_event %}
     <li>
-        <a href="/quiz/{{ quiz.id }}/">{{quiz.name}}</a>
-        {{quiz.start_date}}
-        {{quiz.end_date}}
+        <a href="/quiz/{{ quiz.test_event.id }}/">{{quiz.test_event.test.name}} - {{quiz.test_event.name}}</a>
+        {{quiz.test_event.start_date}}
+        {{quiz.test_event.end_date}}
     </li>
     {% endfor %}
 </ul>

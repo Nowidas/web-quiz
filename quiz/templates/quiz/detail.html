@@ -2,13 +2,13 @@
 
 {% block content %}
 <h1 class="title">
-    list of quzzes........
+    {{quiz.test_event.test.name}}
 </h1>
 <h2 class="subtitle">
-    You welcom :).
+    {{quiz.test_event.name}}
 </h2>
 
-{{quiz}}
+<a href="/quiz/{{ quiz.test_event.id }}/0">START</a>
 
 </ul>
 {% endblock %}

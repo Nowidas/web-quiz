@@ -10,7 +10,7 @@ admin.site.register(Choice)
 admin.site.register(ChoicePerUser)
 
 
-class ChoiceionInline(nested_admin.NestedStackedInline):
+class ChoiceionInline(nested_admin.NestedTabularInline):
     model = Choice
     extra = 1
 
