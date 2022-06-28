@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timezone
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import Http404
 
@@ -28,7 +28,8 @@ def quiz_details(request, quiz_id):
         quiz = get_object_or_404(Test_user, user=request.user.id, test_event=quiz_id)
     except Test.DoesNotExist:
         raise Http404("Quiz does not exist")
-    return render(request, "quiz/detail.html", {"quiz": quiz})
+    if_start = quiz.test_event.start_date < datetime.now(timezone.utc)
+    return render(request, "quiz/detail.html", {"quiz": quiz, "start": if_start})
 
 
 @login_required
@@ -45,47 +46,65 @@ def quiz_logic(request, quiz_id, question_nb):
     except Test.DoesNotExist:
         raise Http404("Quiz does not exist")
 
-    if request.method == "POST":
-        print("POST")
-        # print(request.POST)
-        if "ans" in request.POST:
-            # print(request.POST.getlist("ans"))
+    if quiz.test_event.start_date < datetime.now(timezone.utc):
+        if request.method == "POST":
+            print("POST")
             ChoicePerUser.objects.all().filter(
                 test_user=quiz.id, pick__in=choices
             ).delete()
-            #### Choice.objects.all().filter(question=quiz.test_event.test.id)
-            picked = choices.filter(pk__in=request.POST.getlist("ans"))
-            print(picked)
-            for i in range(len(picked)):
-                picked[i].picks.add(
-                    quiz.id,
-                    through_defaults={"ans_time": datetime.date.today()},
-                )
+            if "ans" in request.POST:
+                picked = choices.filter(pk__in=request.POST.getlist("ans"))
+                print(datetime.today())
+                for i in range(len(picked)):
+                    picked[i].picks.add(
+                        quiz.id,
+                        through_defaults={"ans_time": datetime.today()},
+                    )
 
-        if "DONE" in request.POST:
-            return redirect("summary", quiz_id=quiz_id)
+            if "DONE" in request.POST:
+                return redirect("summary", quiz_id=quiz_id)
+            else:
+                return redirect(
+                    "quiz_logic", quiz_id=quiz_id, question_nb=request.POST["click"]
+                )
         else:
-            return redirect(
-                "quiz_logic", quiz_id=quiz_id, question_nb=request.POST["click"]
+            return render(
+                request,
+                "quiz/question.html",
+                {
+                    "quiz": quiz,
+                    "question": questions[question_nb],
+                    "choices": choices,
+                    "question_nb": question_nb,
+                    "quiz_len": len(questions),
+                    "range": range(len(questions)),
+                    "user_picks": list(user_picks),
+                },
             )
     else:
-        return render(
-            request,
-            "quiz/question.html",
-            {
-                "quiz": quiz,
-                "question": questions[question_nb],
-                "choices": choices,
-                "question_nb": question_nb,
-                "quiz_len": len(questions),
-                "range": range(len(questions)),
-                "user_picks": list(user_picks),
-            },
-        )
+        return redirect("quiz_details", quiz_id=quiz_id)
 
 
 @login_required
 def summary(request, quiz_id):
+    quiz = get_object_or_404(Test_user, user=request.user.id, test_event=quiz_id)
+    quiz.taken = True
+    quiz.score = 0
+    # calculate score #TODO
+    # questions = Question.objects.all().filter(test=quiz.test_event.test.id)
+    # print(questions)
+    # for q in questions:
+    #     choices = Choice.objects.all().filter(question_id__in=q)
+    #     print(choices)
+
+    #     user_picks = (
+    #         ChoicePerUser.objects.all()
+    #         .filter(test_user=quiz.id, pick__in=choices)
+    #         .values_list("pick", flat=True)
+    #     )
+    #     print(user_picks)
+
+    quiz.save()
     return render(request, "quiz/index.html")
 
 

@@ -8,7 +8,11 @@
     {{quiz.test_event.name}}
 </h2>
 
-<a href="/quiz/{{ quiz.test_event.id }}/0">START</a>
+{% if start %}
+<button class='button is-primary'> <a href="/quiz/{{ quiz.test_event.id }}/0">START</a> </button>
+{% else %}
+<button class='button is-primary' disabled> START </button>
+{% endif %}
 
 </ul>
 {% endblock %}
