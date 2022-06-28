@@ -1,0 +1,64 @@
+{% extends 'quiz/base.html' %}
+
+{% block head %}
+<title>SIMPLE QUIZ - Pytanie {{question_nb}}</title>
+{% comment %} <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/timer.js') }}"></script>
+<script src="{{ url_for('static', filename='js/postquestion.js') }}"></script> {% endcomment %}
+{% endblock %}
+
+{% block content %}
+<script>
+    var Seconds = parseInt("{{1}}", 10);
+</script>
+<div class="content">
+
+    <div class="timer">
+        <p id="time">CZ:AS</p>
+    </div>
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class = "tresc">
+        {% for i in range %}
+        {% if i == question_nb %}
+        <button type="submit" class="button is-primary" name='click' value={{i}}>Pytanie {{i|add:1}}</button>
+        {% else %}
+        <button type="submit" class="button" name='click' value={{i}}>Pytanie {{i|add:1}}</button>
+        {% endif %}
+        {% endfor %}
+    <h1>Pytanie {{question_nb|add:1}} na {{quiz_len}}</h1>
+
+    <br>
+    <div class = "tresc">
+        <p1>{{question.question}}</p1>
+    </div>
+    {% if question.img_link %}
+    ZJECIE
+    {% comment %} <img src="{{ url_for('static', filename='pic/' + pytanie["obrazek"])}}" class="rounded-1" alt="Tu podaj tekst alternatywny">         {% endcomment %}
+    {% endif %}
+
+        {% for choice in choices %}
+        {% if choice.id in user_picks %}
+        <input type="checkbox" class="form-check-input" id="odpowiedz{{forloop.counter0|add:1}}" name="ans" value="{{choice.id}}" checked>
+        {% else %}
+        {{choice.id}}
+        {{user_picks.pick}}
+        <input type="checkbox" class="form-check-input" id="odpowiedz{{forloop.counter0|add:1}}" name="ans" value="{{choice.id}}">
+        {% endif %}
+        <label for="odpowiedz{{forloop.counter0|add:1}}" class="form-check-label">{{choice}}</label><br>
+        {% endfor %}
+        </div>
+        {% if question_nb != 0 %}
+        <button type="submit" class="btn btn-primary" name='click' value={{question_nb|add:-1}}>Wstecz</button>
+        {% else %}
+        <button type="submit" class="btn btn-primary" disabled>Wstecz</button>
+        {% endif %}
+        {% if quiz_len == question_nb|add:1 %}
+        <button type="submit" class="btn btn-danger" name='DONE'>WYŚLIJ !</button>
+        {% else %}
+        <button type="submit" class="btn btn-primary" name='click' value={{question_nb|add:1}}>Następne</button>
+        {% endif %}
+
+    </form>
+</div>
+{% endblock %}
