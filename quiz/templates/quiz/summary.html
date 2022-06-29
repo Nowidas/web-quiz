@@ -1,62 +1,50 @@
 {% extends 'quiz/base.html' %}
 
 {% block head %}
-<title>SIMPLE QUIZ - Pytanie {{question_nb}}</title>
+<title>SIMPLE QUIZ - Summary</title>
 {% comment %} <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/timer.js') }}"></script>
 <script src="{{ url_for('static', filename='js/postquestion.js') }}"></script> {% endcomment %}
 {% endblock %}
 
 {% block content %}
-<script>
-    var Seconds = parseInt("{{1}}", 10);
-</script>
+
 <div class="content">
 
-    <div class="timer">
-        <p id="time">CZ:AS</p>
-    </div>
-    <form method="POST" action="">
-        {% csrf_token %}
-        <div class = "tresc">
-        {% for i in range %}
-        {% if i == question_nb %}
-        <button type="submit" class="button is-primary" name='click' value={{i}}>Pytanie {{i|add:1}}</button>
+{{test_event.test.name}} - {{test_event.name}}
+
+<div class="content">
+{% regroup all_choices by question as question_list %}
+<ol type="I">
+    {% for question in question_list %}
+       <li>{{ question.grouper}}
+       <ol type="1">
+        {% for item in question.list %}
+        {% if item.id in all_user_pick and item.if_correct %}
+        <li class = 'has-text-success'>{{ item.choice_text}}</li>
+        {% elif item.id in all_user_pick and not item.if_correct %}
+        <li class = 'has-text-danger' >{{ item.choice_text}}</li>
+        {% elif item.if_correct %}
+        <li class = 'has-text-warning' >{{ item.choice_text}}</li>
         {% else %}
-        <button type="submit" class="button" name='click' value={{i}}>Pytanie {{i|add:1}}</button>
-        {% endif %}
+        <li class = 'has-text-black' >{{ item.choice_text}}</li>
+        {% endif %}  
         {% endfor %}
-    <h1>Pytanie {{question_nb|add:1}} na {{quiz_len}}</h1>
-
-    <br>
-    <div class = "tresc">
-        <p1>{{question.question}}</p1>
-    </div>
-    {% if question.img_link %}
-    ZJECIE
-    {% comment %} <img src="{{ url_for('static', filename='pic/' + pytanie["obrazek"])}}" class="rounded-1" alt="Tu podaj tekst alternatywny">         {% endcomment %}
-    {% endif %}
-
-        {% for choice in choices %}
-        {% comment %} {% if (forloop.counter0+1)|string in odpowiedziane %} {% endcomment %}
-        {% comment %} <input type="radio" class="form-check-input" id="odpowiedz{{forloop.counter0|add:1}}" name="odpowiedzi" value="{{forloop.counter0|add:1}}" checked>
-        {% else %} {% endcomment %}
-        <input type="radio" class="form-check-input" id="odpowiedz{{forloop.counter0|add:1}}" name="odpowiedzi" value="{{forloop.counter0|add:1}}">
-        {% comment %} {% endif %} {% endcomment %}
-        <label for="odpowiedz{{forloop.counter0|add:1}}" class="form-check-label">{{choice}}</label><br>
-        {% endfor %}
-        </div>
-        {% if question_nb != 0 %}
-        <button type="submit" class="btn btn-primary" name='click' value={{question_nb|add:-1}}>Wstecz</button>
-        {% else %}
-        <button type="submit" class="btn btn-primary" disabled>Wstecz</button>
+        {% if test_event.end_date <= question.list.0.ans_time %}
+        ZA PÓŹNO
         {% endif %}
-        {% if quiz_len == question_nb|add:1 %}
-        <button type="submit" class="btn btn-danger" name='DONE'>WYŚLIJ !</button>
-        {% else %}
-        <button type="submit" class="btn btn-primary" name='click' value={{question_nb|add:1}}>Następne</button>
-        {% endif %}
+    </ol>
+    </li>
+    {% endfor %}
+    {{quiz.score}}
+</ol>
+</div>
+{% comment %} {% for q in questions %}
+<br>
+{{q}}
+{% for q in q %}
 
-    </form>
+{% endfor %}
+{% endfor %} {% endcomment %}
 </div>
 {% endblock %}
