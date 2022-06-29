@@ -29,10 +29,10 @@
         {% else %}
         <li class = 'has-text-black' >{{ item.choice_text}}</li>
         {% endif %}  
-        {% endfor %}
-        {% if test_event.end_date <= question.list.0.ans_time %}
+        {% if test_event.end_date <= item.ans_time %}
         ZA PÓŹNO
         {% endif %}
+        {% endfor %}
     </ol>
     </li>
     {% endfor %}

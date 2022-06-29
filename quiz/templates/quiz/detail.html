@@ -9,10 +9,16 @@
 </h2>
 
 {% if start %}
-<button class='button is-primary'> <a href="/quiz/{{ quiz.test_event.id }}/0">START</a> </button>
+<button class='button is-primary has-text-white'> <a href="/quiz/{{ quiz.test_event.id }}/0">START</a> </button>
 {% else %}
-<button class='button is-primary' disabled> START </button>
+<button class='button is-primary has-text-white' disabled> START </button>
 {% endif %}
+{% if taken %}
+<button class='button has-text-black'> <a href="/quiz/{{ quiz.test_event.id }}/summary">Summary</a> </button>
 
+{% else %}
+<button class='button has-text-black' disabled> Summary </button>
+
+{% endif %}
 </ul>
 {% endblock %}

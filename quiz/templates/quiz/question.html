@@ -2,20 +2,14 @@
 
 {% block head %}
 <title>SIMPLE QUIZ - Pytanie {{question_nb}}</title>
-{% comment %} <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/timer.js') }}"></script>
-<script src="{{ url_for('static', filename='js/postquestion.js') }}"></script> {% endcomment %}
+
 {% endblock %}
 
 {% block content %}
-<script>
-    var Seconds = parseInt("{{1}}", 10);
-</script>
+
 <div class="content">
 
-    <div class="timer">
-        <p id="time">TI:ME</p>
-    </div>
+
     <form method="POST" action="">
         {% csrf_token %}
         <div class = "tresc">
@@ -33,17 +27,15 @@
         <p1>{{question.question}}</p1>
     </div>
     {% if question.img_link %}
-    ZJECIE
+    <img src="{{question.img_link}}" /> <br>
     {% comment %} <img src="{{ url_for('static', filename='pic/' + pytanie["obrazek"])}}" class="rounded-1" alt="Tu podaj tekst alternatywny">         {% endcomment %}
     {% endif %}
 
         {% for choice in choices %}
         {% if choice.id in user_picks %}
-        <input type="checkbox" class="form-check-input" id="odpowiedz{{forloop.counter0|add:1}}" name="ans" value="{{choice.id}}" checked>
+        <input type="{{question.q_type}}" class="form-check-input" id="odpowiedz{{forloop.counter0|add:1}}" name="ans" value="{{choice.id}}" checked>
         {% else %}
-        {{choice.id}}
-        {{user_picks.pick}}
-        <input type="checkbox" class="form-check-input" id="odpowiedz{{forloop.counter0|add:1}}" name="ans" value="{{choice.id}}">
+        <input type="{{question.q_type}}" class="form-check-input" id="odpowiedz{{forloop.counter0|add:1}}" name="ans" value="{{choice.id}}">
         {% endif %}
         <label for="odpowiedz{{forloop.counter0|add:1}}" class="form-check-label">{{choice}}</label><br>
         {% endfor %}

@@ -30,8 +30,17 @@ def quiz_details(request, quiz_id):
         quiz = get_object_or_404(Test_user, user=request.user.id, test_event=quiz_id)
     except Test.DoesNotExist:
         raise Http404("Quiz does not exist")
-    if_start = quiz.test_event.start_date < datetime.now(timezone.utc)
-    return render(request, "quiz/detail.html", {"quiz": quiz, "start": if_start})
+    if_start = (
+        quiz.test_event.start_date < datetime.now(timezone.utc)
+        and quiz.test_event.end_date > datetime.now(timezone.utc)
+        and not quiz.taken
+    )
+    if_taken = quiz.taken
+    return render(
+        request,
+        "quiz/detail.html",
+        {"quiz": quiz, "start": if_start, "taken": if_taken},
+    )
 
 
 @login_required
@@ -51,7 +60,9 @@ def quiz_logic(request, quiz_id, question_nb):
     if quiz.test_event.start_date < datetime.now(timezone.utc):
         if request.method == "POST":
             print("POST")
-            if quiz.test_event.end_date >= datetime.now(timezone.utc) or not user_picks:
+            if (
+                quiz.test_event.end_date >= datetime.now(timezone.utc) or not user_picks
+            ) and not quiz.taken:
                 ChoicePerUser.objects.all().filter(
                     test_user=quiz.id, pick__in=choices
                 ).delete()
@@ -108,8 +119,8 @@ def summary(request, quiz_id):
     all_choices = all_choices.annotate(ans_time=first_date)
 
     # if test end calculate score
-    if not quiz.taken:
-        # if True:
+    # if not quiz.taken:
+    if True:
         quiz.taken = True
         quiz.score = 0
         for i in range(len(questions)):
@@ -118,15 +129,11 @@ def summary(request, quiz_id):
                 test_user=quiz.id, pick__in=choices.values("id")
             )
             right_choices = choices.filter(if_correct=True)
-            # print(set(right_choices.values_list("id", flat=True)))
-            # print(set(user_picks.values_list("pick", flat=True)))
-            # print(user_picks.first().ans_time <= quiz.test_event.end_date)
             if (
                 set(right_choices.values_list("id", flat=True))
                 == set(user_picks.values_list("pick", flat=True))
                 and user_picks.first().ans_time <= quiz.test_event.end_date
             ):
-
                 quiz.score += 1
         quiz.save()
     return render(
