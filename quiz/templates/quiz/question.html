@@ -1,7 +1,7 @@
 {% extends 'quiz/base.html' %}
 
 {% block head %}
-<title>SIMPLE QUIZ - Pytanie {{question_nb}}</title>
+<title>DJANGO QUIZ - Question  {{question_nb}}</title>
 
 {% endblock %}
 
@@ -10,36 +10,38 @@
 
 <div class="content">
 
+    <h1>Question {{question_nb|add:1}} na {{quiz_len}}</h1>
 
     <form method="POST" action="">
         {% csrf_token %}
-        <div class = "tresc">
+        <div class = "content">
         {% for i in range %}
         {% if i == question_nb %}
-        <button type="submit" class="button is-primary" name='click' value={{i}}>Pytanie {{i|add:1}}</button>
+        <button type="submit" class="button is-primary" name='click' value={{i}}>Question {{i|add:1}}</button>
         {% else %}
-        <button type="submit" class="button" name='click' value={{i}}>Pytanie {{i|add:1}}</button>
+        <button type="submit" class="button" name='click' value={{i}}>Question {{i|add:1}}</button>
         {% endif %}
         {% endfor %}
-    <h1>Pytanie {{question_nb|add:1}} na {{quiz_len}}</h1>
 
-    <br>
-    <div class = "tresc">
+    <div class = "content"></div>
+    <div class = "subtitle has-text-justified">
         <p1>{{question.question}}</p1>
     </div>
     {% if question.img_link %}
-    <img src="{{question.img_link}}" /> <br>
-    {% comment %} <img src="{{ url_for('static', filename='pic/' + pytanie["obrazek"])}}" class="rounded-1" alt="Tu podaj tekst alternatywny">         {% endcomment %}
+    <div class = "level-left"><img  src="{{question.img_link}}" /></div>
+    <div class='content'></div>
     {% endif %}
 
         {% for choice in choices %}
+        <div class='content  has-text-justified'>
         {% if choice.id in user_picks %}
-        <input type="{{question.q_type}}" class="form-check-input" id="odpowiedz{{forloop.counter0|add:1}}" name="ans" value="{{choice.id}}" checked>
+        <input type="{{question.q_type}}" class="{{question.q_type}}" id="odpowiedz{{forloop.counter0|add:1}}" name="ans" value="{{choice.id}}" checked>
         {% else %}
-        <input type="{{question.q_type}}" class="form-check-input" id="odpowiedz{{forloop.counter0|add:1}}" name="ans" value="{{choice.id}}">
+        <input type="{{question.q_type}}" class="{{question.q_type}}" id="odpowiedz{{forloop.counter0|add:1}}" name="ans" value="{{choice.id}}">
         {% endif %}
         <label for="odpowiedz{{forloop.counter0|add:1}}" class="form-check-label">{{choice}}</label><br>
         {% endfor %}
+        </div>
         </div>
         {% if question_nb != 0 %}
         <button type="submit" class="button" name='click' value={{question_nb|add:-1}}>Back</button>

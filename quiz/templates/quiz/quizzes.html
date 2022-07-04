@@ -31,9 +31,9 @@
             <td>{{quiz.test_event.start_date|date:"H:i,  d.m.y"}}</td>
                 <td>{{quiz.test_event.end_date|date:"H:i,  d.m.y"}}</td>
                 {% if  quiz.if_open %}
-                <td><button class="button is-primary"> <a class='has-text-white' href="/quiz/{{ quiz.test_event.id }}/"> Open - Description </a> </button></td>
+                <td><button class="button is-primary is-fullwidth"> <a class='has-text-white' href="/quiz/{{ quiz.test_event.id }}/"> Description </a> </button></td>
                 {% else %}
-                <td><button class="button"> <a class='has-text-black' href="/quiz/{{ quiz.test_event.id }}/"> Description </a> </button></td>
+                <td><button class="button is-fullwidth"> <a class='has-text-black' href="/quiz/{{ quiz.test_event.id }}/"> Description </a> </button></td>
     
                 {% endif %}
     </tr>
@@ -64,6 +64,7 @@
                 <th>Open date</th>
                 <th>Close date</th>
                 <th>Score</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -74,10 +75,11 @@
                 <td>{{quiz.test_event.start_date|date:"H:i,  d.m.y" }}</td>
                     <td>{{quiz.test_event.end_date|date:"H:i,  d.m.y"}}</td>
                     {% if  quiz.taken%}
-                    <td> {{quiz.score}} / {{quiz.max_score}} </td>
+                    <td > {{quiz.score}} / {{quiz.max_score}} </td>
                     {% else %}
                     <td> ❌ </td>
                     {% endif %}
+                    <td><button class="button is-fullwidth is-small"> <a class='has-text-black' href="/quiz/{{ quiz.test_event.id }}/"> Description </a> </button></td>
         </tr>
         {% endfor %}
     </tbody>
