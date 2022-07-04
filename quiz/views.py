@@ -9,19 +9,38 @@ from django.contrib.auth.models import User
 
 from django.contrib import messages
 
-from django.db.models import OuterRef, Subquery
+from django.db.models import OuterRef, Subquery, Q
 from .models import Choice, ChoicePerUser, Question, Test, Test_event, Test_user
 
 # Create your views here.
-@login_required
 def index(request):
     return render(request, "quiz/index.html")
 
 
 @login_required
 def quizzes(request):
-    infooo = Test_user.objects.all().filter(user=request.user.id).order_by("start_date")
-    return render(request, "quiz/quizzes.html", {"quiz_event": infooo})
+    incoming_quiz_info = (
+        (
+            Test_user.objects.all().filter(
+                user=request.user.id,
+                taken=False,
+                test_event__end_date__gt=datetime.now(timezone.utc),
+            )
+        )
+        .annotate(if_open=Q(test_event__start_date__lte=datetime.now(timezone.utc)))
+        .order_by("-if_open", "-test_event__end_date")
+    )
+    old_quiz_info = (
+        Test_user.objects.all()
+        .filter(user=request.user.id)
+        .filter(Q(taken=True) | Q(test_event__end_date__lte=datetime.now(timezone.utc)))
+        .order_by("-test_event__start_date")
+    )
+    return render(
+        request,
+        "quiz/quizzes.html",
+        {"incoming_quiz_event": incoming_quiz_info, "old_quiz_event": old_quiz_info},
+    )
 
 
 @login_required
@@ -123,12 +142,14 @@ def summary(request, quiz_id):
     if True:
         quiz.taken = True
         quiz.score = 0
+        quiz.max_score = 0
         for i in range(len(questions)):
             choices = all_choices.filter(question_id=questions[i].id)
             user_picks = all_user_pick.all().filter(
                 test_user=quiz.id, pick__in=choices.values("id")
             )
             right_choices = choices.filter(if_correct=True)
+            quiz.max_score += 1
             if (
                 set(right_choices.values_list("id", flat=True))
                 == set(user_picks.values_list("pick", flat=True))

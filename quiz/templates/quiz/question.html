@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block content %}
+<div class='hero-body is-centered has-text-centered'>
 
 <div class="content">
 
@@ -41,16 +42,33 @@
         {% endfor %}
         </div>
         {% if question_nb != 0 %}
-        <button type="submit" class="btn btn-primary" name='click' value={{question_nb|add:-1}}>Wstecz</button>
+        <button type="submit" class="button" name='click' value={{question_nb|add:-1}}>Back</button>
         {% else %}
-        <button type="submit" class="btn btn-primary" disabled>Wstecz</button>
+        <button type="submit" class="button" disabled>Back</button>
         {% endif %}
         {% if quiz_len == question_nb|add:1 %}
-        <button type="submit" class="btn btn-danger" name='DONE'>WYŚLIJ !</button>
+        <button type='button' class="js-modal-trigger button is-danger" data-target="modal-js-send"> Send!</button>
         {% else %}
-        <button type="submit" class="btn btn-primary" name='click' value={{question_nb|add:1}}>Następne</button>
+        <button type="submit" class="button" name='click' value={{question_nb|add:1}}>Next</button>
         {% endif %}
 
+    </div>
+    <div id="modal-js-send" class="modal">
+        <div class="modal-background"></div>
+      
+        <div class="modal-content">
+          <div class="box">
+            <h1>Are you sure?</h1>
+            <!-- Your content -->
+            <div class="modal-close-button">
+                <button type="submit" class="button is-success" name='DONE'>Send</button>
+                <button  type="button" aria-label="close" class="button" >Cancel</button>
+              </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close">Cancel</button>
+        </div>
+    </div>
     </form>
 </div>
+
 {% endblock %}

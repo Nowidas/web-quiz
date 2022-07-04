@@ -37,9 +37,10 @@ class Test_user(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     test_event = models.ForeignKey(Test_event, on_delete=models.CASCADE)
 
-    taken = models.BooleanField(blank=True, null=True)
+    taken = models.BooleanField(default=False)
     start_date = models.DateTimeField(blank=True, null=True)
     score = models.IntegerField(blank=True, null=True)
+    max_score = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return str(self.test_event) + " - " + str(self.user.username)

@@ -7,50 +7,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Django Web Quiz</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    {% load static %}
+    <script src='{% static 'quiz/burger.js' %}'></script>   
 </head>
 
 <body>
-    <section class="hero $light is-fullheight">
-
-        <div class="hero-head">
-            <nav class="navbar">
-                <div class="container">
-                    <div id="navbarMenuHeroA" class="navbar-menu">
-                        <div class="navbar-end">
-                            <a href="/" class="navbar-item">
-                                HOME
-                            </a>
-                            {% if not user.is_authenticated %}
-                            <a href="{% url 'login' %}" class="navbar-item">
-                                Login
-                            </a>
-                            <a href="{% url 'signup' %}" class="navbar-item">
-                                signup
-                            </a>
-                            {% else %}
-                            <a href="{% url 'quizzes' %}" class="navbar-item">
-                                Quizzes
-                            </a>
-                            <a href="{% url 'quizzes' %}" class="navbar-item">
-                                {{ user.username }}
-                            </a>
-                            <a href="{% url 'logout' %}" class="navbar-item">
-                                Logout
-                            </a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </nav>
+    <nav class="navbar is-fixed-top is-warning" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="https://bulma.io">
+            <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+          </a>
+          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
         </div>
+        <div id="navbarBasicExample" class="navbar-menu">
+          <div class="navbar-start">
+              
+            <a href="{% url 'index' %}" class="navbar-item">
+                Home
+            </a>
+            <a href="{% url 'quizzes' %}" class="navbar-item">
+                Quizzes
+            </a>
+      
+          </div>
+      
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <div class="buttons">
+                {% if not user.is_authenticated %}
+                <a href="{% url 'signup' %}" class="button is-primary">
+                    Sign up
+                <a href="{% url 'login' %}" class="button is-light">
+                    Log in
+                </a>
+                </a>
+                {% else %}
+                <a href="{% url 'quizzes' %}" class="button is-light">
+                    {{ user.username }}
+                </a>
+                <a href="{% url 'logout' %}" class="button is-danger">
+                    Log out
+                </a>
+                {% endif %}
 
-        <div class="hero-body">
-            <div class="container has-text-centered">
-                {% block content %}
-                {% endblock %}
+              </div>
             </div>
+          </div>
         </div>
-    </section>
+      </nav>
+
+            {% comment %} {% comment %} <section  class='hero is-fullheight-with-navbar is-danger is-centered '> {% endcomment %}
+            <div class='hero-body is-centered '>
+            </div>
+                    {% block content %}
+                {% endblock %}
+
+            {% comment %} </section > {% endcomment %}
 </body>
 
 </html>

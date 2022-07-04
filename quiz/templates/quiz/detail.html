@@ -1,6 +1,7 @@
 {% extends "quiz/base.html" %}
 
 {% block content %}
+<div class='hero-body is-centered has-text-centered'>
 <h1 class="title">
     {{quiz.test_event.test.name}}
 </h1>
@@ -9,7 +10,7 @@
 </h2>
 
 {% if start %}
-<button class='button is-primary has-text-white'> <a href="/quiz/{{ quiz.test_event.id }}/0">START</a> </button>
+<button class='button is-primary has-text-white'> <a class='has-text-white' href="/quiz/{{ quiz.test_event.id }}/0">START</a> </button>
 {% else %}
 <button class='button is-primary has-text-white' disabled> START </button>
 {% endif %}
@@ -21,4 +22,6 @@
 
 {% endif %}
 </ul>
+</div>
+
 {% endblock %}
