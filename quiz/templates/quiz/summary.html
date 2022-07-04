@@ -2,49 +2,67 @@
 
 {% block head %}
 <title>SIMPLE QUIZ - Summary</title>
-{% comment %} <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/timer.js') }}"></script>
-<script src="{{ url_for('static', filename='js/postquestion.js') }}"></script> {% endcomment %}
 {% endblock %}
 
 {% block content %}
 
-<div class="content">
 
-{{test_event.test.name}} - {{test_event.name}}
 
-<div class="content">
-{% regroup all_choices by question as question_list %}
-<ol type="I">
-    {% for question in question_list %}
-       <li>{{ question.grouper}}
-       <ol type="1">
-        {% for item in question.list %}
-        {% if item.id in all_user_pick and item.if_correct %}
-        <li class = 'has-text-success'>{{ item.choice_text}}</li>
-        {% elif item.id in all_user_pick and not item.if_correct %}
-        <li class = 'has-text-danger' >{{ item.choice_text}}</li>
-        {% elif item.if_correct %}
-        <li class = 'has-text-warning' >{{ item.choice_text}}</li>
-        {% else %}
-        <li class = 'has-text-black' >{{ item.choice_text}}</li>
-        {% endif %}  
-        {% if test_event.end_date <= item.ans_time %}
-        ZA PÓŹNO
-        {% endif %}
-        {% endfor %}
-    </ol>
-    </li>
-    {% endfor %}
-    {{quiz.score}}
-</ol>
-</div>
-{% comment %} {% for q in questions %}
-<br>
-{{q}}
-{% for q in q %}
 
-{% endfor %}
-{% endfor %} {% endcomment %}
+
+
+
+<div class="columns is-mobile is-centered">
+
+    <div class="column is-half has-text-centered">
+        <h2 class="title is-4">
+            <p>{{test_event.test.name}} - {{test_event.name}}</p>
+        </h2> 
+    </div>  
+    </div>  
+    
+                
+    <div class="columns is-mobile is-centered">
+    
+    <div class="column is-half ">
+    
+    <table class="table is-fullwidth ">
+        <div class="content">
+            {% regroup all_choices by question as question_list %}
+            <ol type="1" >
+                {% for question in question_list %}
+                    <li class="subtitle"> {{ question.grouper}}</li>
+                    {% for item in question.list %}
+                    {% if forloop.first and test_event.end_date <= item.ans_time %}
+                    <div class = 'has-text-danger' >Answer after time </div>
+                    {% endif %}  
+                    <div>    
+                        {% if item.id in all_user_pick and item.if_correct %}
+                        <p class = 'has-text-success'>☑️ - {{ item.choice_text}}</p>
+                        {% elif item.id in all_user_pick and not item.if_correct %}
+                        <p class = 'has-text-danger' >☑️ - {{ item.choice_text}}</p>
+                        {% elif item.if_correct %}
+                        <p class = 'has-text-danger' >🔲 - {{ item.choice_text}}</p>
+                        {% else %}
+                        <p class = 'has-text-black' >🔲 - {{ item.choice_text}}</p>
+                        {% endif %}  
+
+                    </div> 
+                    {% endfor %}
+                    <div class='content'></div>
+                {% endfor %}
+                <div class="title is-5"> Score: {{quiz.score}} / {{quiz.max_score}}</div>
+            </ol>
+    </table>
+
+
+    </div>  
+    </div> 
+
+
+
+
+
+
 </div>
 {% endblock %}
